@@ -18,8 +18,8 @@ export class AppController {
   @Post('producer')
   async producer(@Body() body) {
     await this.kafkaProducer.send({
-      topic: 'topico-exemplo',
-      messages: [{ key: 'pagamentos', value: JSON.stringify(body) }],
+      topic: 'buying-process',
+      messages: [{ key: 'billing', value: JSON.stringify(body) }],
     });
     return 'Mensagem publicada';
   }

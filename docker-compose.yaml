@@ -4,6 +4,9 @@ services:
     consumer:
         container_name: nestjs_consumer_prod
         image: nestjs-consumer-prod:1.0.0
+        depends_on:
+        - kafka
+        - mongo
         build:
             context: ./consumer
             target: production
@@ -21,20 +24,31 @@ services:
     producer:
         container_name: nestjs_producer_prod
         image: nestjs-producer-prod:1.0.0
+        depends_on:
+        - kafka
         build:
             context: ./producer
             target: production
             dockerfile: ./Dockerfile
         command: npm run start:prod
         ports:
-            - 3001:3000
+            - 3002:3000
         networks:
             - kafka-network
         volumes:
             - .:/usr/src/app
             - /usr/src/app/node_modules
         restart: unless-stopped 
-
+    mongo:
+        image: mongo
+        restart: always
+        ports:
+            - 27017:27017
+        networks:
+            - kafka-network
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: example
     zookeeper:
         image: confluentinc/cp-zookeeper:latest
         networks:
@@ -46,8 +60,6 @@ services:
         image: confluentinc/cp-kafka:latest
         depends_on:
         - zookeeper
-        - consumer
-        - producer
         ports:
         - 9092:9092
         networks:
