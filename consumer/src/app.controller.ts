@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Put } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { KafkaMessage } from '@nestjs/microservices/external/kafka.interface';
 import { AppService } from './app.service';
@@ -18,13 +18,13 @@ export class AppController {
     return this.appService.findAllBilling();
   }
 
-  @MessagePattern('buying-process')
-  consumer(@Payload() message: KafkaMessage) {
+  @MessagePattern('buying-create')
+  async consumerCreate(@Payload() message: KafkaMessage) {
     const msg = message as unknown as CreateBillingDTO;
     const billing = {
       ...msg,
       status: BillingStatus.PENDING,
     };
-    this.appService.createBilling(billing);
+    await this.appService.createBilling(billing);
   }
 }

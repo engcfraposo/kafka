@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { KafkaMessage } from '@nestjs/microservices/external/kafka.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateBillingDTO } from './dto/billing.dto';
+import { BillingStatus, CreateBillingDTO } from './dto/billing.dto';
 import { Billing, BillingDocument } from './entity/billing.dto';
 
 @Injectable()
@@ -20,4 +21,5 @@ export class AppService {
   findAllBilling() {
     return this.billingModel.find().exec();
   }
+
 }
