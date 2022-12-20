@@ -18,7 +18,7 @@ export class AppController {
     private kafkaProducer: Producer,
   ) {}
 
-  @Get()
+  @Get('/healthcheck')
   getHello(): string {
     return this.appService.getHello();
   }
@@ -30,24 +30,5 @@ export class AppController {
       messages: [{ key: 'billing', value: JSON.stringify(body) }],
     });
     return 'ordem criada';
-  }
-
-  @Put('producer/success/:id')
-  async producerSuccess(@Param('id') id: string) {
-    console.log(id);
-    await this.kafkaProducer.send({
-      topic: 'buying-success',
-      messages: [{ key: 'billing', value: id }],
-    });
-    return 'ordem aprovada';
-  }
-
-  @Put('producer/failed/:id')
-  async producerFailed(@Param('id') id: string) {
-    await this.kafkaProducer.send({
-      topic: 'buying-failed',
-      messages: [{ key: 'billing', value: JSON.stringify({ id }) }],
-    });
-    return 'ordem recusada';
   }
 }

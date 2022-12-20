@@ -10,7 +10,7 @@ export class AppService {
     @InjectModel(Billing.name) private billingModel: Model<BillingDocument>,
   ) {}
   getHello(): string {
-    return 'Hello World!';
+    return 'Hello Consumer!';
   }
   createBilling(dto: CreateBillingDTO) {
     const billing = new this.billingModel(dto);
